@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Еселік және бөліктер қосындысы</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap">
+<style>
+:root{--bg:#f4f9ff;--surf:#fff;--ink:#17324d;--muted:#52677c;--apple:#e0323f;--basket:#c98a2b;--leaf:#2f9a58;--line:#d3e2f2;--ok:#1d7a44;--bad:#b3261e;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1c2b;--surf:#172a3f;--ink:#eaf2fb;--muted:#a3b6c9;--line:#2b4560;--apple:#ff6470;--basket:#e2a64a;--leaf:#55c383;--ok:#6fdc9b;--bad:#ff8a80}}
+:root[data-theme="dark"]{--bg:#0f1c2b;--surf:#172a3f;--ink:#eaf2fb;--muted:#a3b6c9;--line:#2b4560;--apple:#ff6470;--basket:#e2a64a;--leaf:#55c383;--ok:#6fdc9b;--bad:#ff8a80}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 18px/1.55 "Nunito",system-ui,"Segoe UI",Arial,sans-serif}
+main{max-width:860px;margin:0 auto;padding:20px 18px 60px}
+h1{font-size:clamp(30px,6vw,48px);line-height:1.1;font-weight:900;margin:8px 0 10px}
+h2{font-size:26px;font-weight:900;margin:48px 0 6px}
+p{margin:0 0 12px;max-width:62ch}
+.sub{color:var(--muted)}
+.card{background:var(--surf);border:2px solid var(--line);border-radius:18px;padding:18px;margin:14px 0}
+.ctl{display:flex;flex-wrap:wrap;gap:18px;margin:10px 0 14px}
+.ctl label{display:flex;flex-direction:column;font-weight:700;min-width:150px;flex:1}
+input[type=range]{accent-color:var(--apple);width:100%}
+#stage{display:flex;flex-wrap:wrap;gap:10px;margin:8px 0 14px;min-height:80px}
+.bk{border:3px solid var(--basket);border-top-width:8px;border-radius:6px 6px 22px 22px;padding:6px;display:grid;grid-template-columns:repeat(3,18px);gap:4px;justify-content:center;min-width:76px;background:color-mix(in srgb,var(--basket) 12%,transparent)}
+.ap{width:18px;height:18px;border-radius:50%;background:var(--apple)}
+.eq{font-size:22px;font-weight:900;overflow-wrap:anywhere}
+.eq b{color:var(--apple)}
+.q{font-size:20px;font-weight:700;margin-bottom:10px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+input[type=number]{font:inherit;width:110px;padding:8px 12px;border:2px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink)}
+button{font:inherit;font-weight:700;padding:8px 16px;border-radius:12px;border:2px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer}
+button.main{background:var(--leaf);border-color:var(--leaf);color:#fff}
+button:focus-visible,input:focus-visible{outline:3px solid var(--apple);outline-offset:2px}
+.fb{margin-top:10px;font-weight:700;min-height:1.4em}
+.fb.ok{color:var(--ok)}.fb.bad{color:var(--bad)}
+.sol{margin-top:8px;padding:10px 14px;border-left:5px solid var(--basket);background:color-mix(in srgb,var(--basket) 10%,transparent);border-radius:0 12px 12px 0;display:none}
+.tag{display:inline-block;font-weight:900;color:#fff;background:var(--basket);border-radius:10px;padding:0 10px;margin-right:8px}
+.rule{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.rule div{background:var(--surf);border:2px solid var(--line);border-radius:14px;padding:12px 14px}
+#score{font-size:22px;font-weight:900;margin-top:16px}
+</style>
+</head>
+<body>
+<main>
+<h1>Еселік және бөліктер қосындысы</h1>
+<p class="sub">3-сынып · Математикалық олимпиада және логика · Факультатив сабақ</p>
+<p>Бірдей қосылғыштарды көбейтумен жазуға болады. Төменде себеттер мен алмалар арқылы өзің тексер.</p>
+
+<div class="card">
+  <div class="ctl">
+    <label>Себет саны: <span id="gv">6</span><input id="g" type="range" min="1" max="9" value="6"></label>
+    <label>Әр себетте алма: <span id="pv">4</span><input id="p" type="range" min="1" max="9" value="4"></label>
+  </div>
+  <div id="stage" aria-live="polite"></div>
+  <div class="eq" id="sum"></div>
+  <div class="eq" id="mul"></div>
+</div>
+
+<h2>Есте сақта</h2>
+<div class="rule">
+  <div><b>Қосу:</b> 4 + 4 + 4 = 12</div>
+  <div><b>Көбейту:</b> 3 × 4 = 12, яғни 4 саны 3 рет қосылды</div>
+  <div><b>Өрнек құру:</b> бірдей топтар болса, көбейтеміз; артық бөлікті бөлек қосамыз немесе азайтамыз</div>
+</div>
+
+<h2>Үлгі мысалдар</h2>
+<p class="sub">Жауабын жазып, «Тексер» батырмасын бас.</p>
+<div id="ex"></div>
+
+<h2>Олимпиада есептері</h2>
+<p class="sub">Алдымен өрнек құр, содан кейін шеш. Қиын болса, «Кеңес» батырмасын бас.</p>
+<div id="ol"></div>
+<div id="score"></div>
+</main>
+
+<script>
+var EX=[
+{t:"а)",q:"7 + 7 + 7 = ?",a:21,s:"7 саны 3 рет қосылған: 7 + 7 + 7 = 21. Көбейтумен: 3 × 7 = 21."},
+{t:"ә)",q:"2 + 2 + 2 + 2 + 2 = ?",a:10,s:"2 саны 5 рет қосылған: 2 + 2 + 2 + 2 + 2 = 10. Көбейтумен: 5 × 2 = 10."},
+{t:"б)",q:"5 × 3 = ?",a:15,s:"5 × 3 дегеніміз 5 санын 3 рет қосу: 5 + 5 + 5 = 15."},
+{t:"в)",q:"6 себетте 4 алмадан бар. Барлығы неше алма?",a:24,s:"Өрнек: 4 + 4 + 4 + 4 + 4 + 4 = 6 × 4 = 24 (алма)."}
+];
+var OL=[
+{q:"Әр букетте 5 гүлден бар. Айгүл 4 букет жасады, сосын тағы 7 гүл қосты. Барлығы неше гүл болды?",a:27,h:"4 букеттегі гүлді көбейтумен тап, сосын 7-ні қос.",s:"Өрнек: 5 × 4 + 7 = 20 + 7 = 27 (гүл)."},
+{q:"Үш табақта 6-дан печенье бар. Әр табақтан 2 печенье жеп қойды. Барлығы неше печенье қалды?",a:12,h:"Басында барлығы қанша болғанын және қанша жегенін бөлек тап.",s:"Өрнек: 3 × 6 − 3 × 2 = 18 − 6 = 12 (печенье). Немесе 3 × (6 − 2) = 12."},
+{q:"4 жәшікте 7-ден алма, 3 жәшікте 5-тен алмұрт бар. Барлығы неше жеміс бар?",a:43,h:"Алманы және алмұртты бөлек санап, қос.",s:"Өрнек: 4 × 7 + 3 × 5 = 28 + 15 = 43 (жеміс)."},
+{q:"Ауладағы 4 велосипедтің әрқайсысында 2 дөңгелек, 3 үш дөңгелекті велосипедтің әрқайсысында 3 дөңгелек бар. Барлығы неше дөңгелек?",a:17,h:"Екі түрлі велосипедті бөлек есепте.",s:"Өрнек: 4 × 2 + 3 × 3 = 8 + 9 = 17 (дөңгелек)."},
+{q:"Бірдей санды 5 рет қосқанда 35 шықты. Сол санды 3 рет қоссаң, неше шығады?",a:21,h:"Алдымен сол санды тап: 5 × ? = 35.",s:"5 × 7 = 35, сан 7 екен. Сонда 7 + 7 + 7 = 3 × 7 = 21."},
+{q:"Мұрат 3 қалтаға 9-дан теңге салды. Дана 6 қалтаға 5-тен теңге салды. Олардың теңгелерінің айырмасы неше теңге?",a:3,h:"Екеуінің де жалпы сомасын тап, сосын үлкенінен кішісін алып таста.",s:"Мұрат: 3 × 9 = 27, Дана: 6 × 5 = 30. Айырмасы: 30 − 27 = 3 (теңге). Дананікі 3 теңге көп."}
+];
+
+function builder(){
+  var g=+document.getElementById("g").value,p=+document.getElementById("p").value;
+  document.getElementById("gv").textContent=g;document.getElementById("pv").textContent=p;
+  var h="";
+  for(var i=0;i<g;i++){h+='<div class="bk" aria-hidden="true">'+'<span class="ap"></span>'.repeat(p)+'</div>'}
+  document.getElementById("stage").innerHTML=h;
+  var parts=[];for(var j=0;j<g;j++)parts.push(p);
+  document.getElementById("sum").innerHTML="Қосу: "+parts.join(" + ")+" = <b>"+g*p+"</b>";
+  document.getElementById("mul").innerHTML="Көбейту: "+g+" × "+p+" = <b>"+g*p+"</b>";
+}
+document.getElementById("g").oninput=builder;document.getElementById("p").oninput=builder;builder();
+
+var done={};
+function upd(){document.getElementById("score").textContent="Дұрыс шешілді: "+Object.keys(done).length+" / "+OL.length}
+function card(item,i,box,isOl){
+  var d=document.createElement("div");d.className="card";
+  var lab=isOl?(i+1)+"-есеп":item.t;
+  d.innerHTML='<div class="q"><span class="tag">'+lab+'</span>'+item.q+'</div>'+
+  '<div class="row"><input type="number" inputmode="numeric" aria-label="Жауап"><button class="main">Тексер</button>'+
+  (isOl?'<button class="hint">Кеңес</button>':'')+'<button class="show">Шешуін көр</button></div>'+
+  '<div class="fb" aria-live="polite"></div><div class="sol"></div>';
+  var inp=d.querySelector("input"),fb=d.querySelector(".fb"),sol=d.querySelector(".sol");
+  function check(){
+    if(inp.value===""){fb.className="fb bad";fb.textContent="Алдымен жауабыңды жаз.";return}
+    if(+inp.value===item.a){fb.className="fb ok";fb.textContent="Дұрыс! Жарайсың!";if(isOl){done[i]=1;upd()}}
+    else{fb.className="fb bad";fb.textContent="Әлі емес. Қайта ойланып көр."}
+  }
+  d.querySelector(".main").onclick=check;
+  inp.onkeydown=function(e){if(e.key==="Enter")check()};
+  d.querySelector(".show").onclick=function(){sol.style.display="block";sol.textContent=item.s};
+  if(isOl)d.querySelector(".hint").onclick=function(){sol.style.display="block";sol.textContent="Кеңес: "+item.h};
+  box.appendChild(d);
+}
+EX.forEach(function(e,i){card(e,i,document.getElementById("ex"),false)});
+OL.forEach(function(e,i){card(e,i,document.getElementById("ol"),true)});
+upd();
+</script>
+</body>
+</html>
